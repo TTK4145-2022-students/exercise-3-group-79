@@ -13,7 +13,7 @@ var buf = make([]byte, 16)
 func main() {
 	/* server */
 	addr, _ := net.ResolveUDPAddr("udp", "localhost:8080")
-	primary := false
+	pr := false
 	conn, err := net.ListenUDP("udp", addr)
 	if err != nil {
 		Println("Error:", err)
@@ -21,11 +21,11 @@ func main() {
 
 	/* Backup */
 	Println("Backup!")
-	for !primary {
+	for !pr {
 		conn.SetReadDeadline(t.Now().Add(2 * t.Second))
 		n, _, err := conn.ReadFromUDP(buf)
 		if err != nil {
-			primary = true
+			pr = true
 		} else {
 			counter = binary.BigEndian.Uint64(buf[:n])
 		}
